@@ -942,3 +942,13 @@ tracked_companies:
     scan_query: '"Maxim AI" OR "getmaxim" careers "engineer" OR "product"'
     notes: "AI evaluation and observability platform. Bangalore-based, mostly on-site."
     enabled: true
+
+  # -- Israel (aggregator boards) --
+
+  - name: ML.co.il (Israel)
+    careers_url: https://machinelearning.co.il/?s=&post_type=job
+    api: https://machinelearning.co.il/wp-json/wp/v2/job?per_page=100
+    type: wordpress_acf
+    region: israel
+    notes: "Aggregator. Israeli AI/ML jobs (Tel Aviv, Herzliya, etc.). Real hiring company set per-job from ACF."
+    enabled: true
