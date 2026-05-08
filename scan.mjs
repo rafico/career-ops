@@ -35,11 +35,6 @@ const FETCH_TIMEOUT_MS = 10_000;
 // ── API detection ───────────────────────────────────────────────────
 
 function detectApi(company) {
-  // Explicit type override (preferred for non-ATS sources)
-  if (company.type && company.api) {
-    return { type: company.type, url: company.api };
-  }
-
   // Greenhouse: explicit api field
   if (company.api && company.api.includes('greenhouse')) {
     return { type: 'greenhouse', url: company.api };
@@ -109,27 +104,7 @@ function parseLever(json, companyName) {
   }));
 }
 
-function parseWordPressAcf(json, portalName) {
-  if (!Array.isArray(json)) return [];
-  const named = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
-  const decode = (s) => (s || '').replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (m, ref) => {
-    if (ref[0] === '#') {
-      const code = ref[1] === 'x' || ref[1] === 'X'
-        ? parseInt(ref.slice(2), 16)
-        : parseInt(ref.slice(1), 10);
-      return Number.isFinite(code) ? String.fromCodePoint(code) : m;
-    }
-    return named[ref.toLowerCase()] ?? m;
-  });
-  return json.map(j => ({
-    title: decode(j.title?.rendered || '').trim(),
-    url: j.link || '',
-    company: j.acf?.company_name?.trim() || portalName,
-    location: j.acf?.job_location?.trim() || '',
-  }));
-}
-
-const PARSERS = { greenhouse: parseGreenhouse, ashby: parseAshby, lever: parseLever, wordpress_acf: parseWordPressAcf };
+const PARSERS = { greenhouse: parseGreenhouse, ashby: parseAshby, lever: parseLever };
 
 // ── Fetch with timeout ──────────────────────────────────────────────
 
